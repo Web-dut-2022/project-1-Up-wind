@@ -24,5 +24,18 @@ def entry(request, title):
         return render(request, "encyclopedia/entry.html", context)
 
 def search(request):
-    return HttpResponseRedirect(reverse("index"))
-    # return render(request, "encyclopedia/search.html", context)
+    word = request.POST.get('q')
+    if not word:
+        return HttpResponseRedirect(reverse("index"))
+    entry_list = util.list_entries()
+    entries = []
+    if word in entry_list:
+        return HttpResponseRedirect(reverse("entry", args=(word,)))
+    else:
+        for entry in entry_list:
+            if entry.find(word) != -1:
+                entries.append(entry)
+        context = {
+            "entries": entries
+        }
+        return render(request, "encyclopedia/search.html", context)
