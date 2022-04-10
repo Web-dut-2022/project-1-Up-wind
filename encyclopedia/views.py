@@ -49,7 +49,7 @@ def create(request):
         content = request.POST.get('content')
         if not title:
             return render(request, "encyclopedia/error.html", {"message": "Please input title!"})
-        elif title in util.get_entry():
+        elif title in util.list_entries():
             return render(request, "encyclopedia/error.html", {"message": "Page already exists!"})
         else:
             util.save_entry(title, content)
