@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from markdown2 import Markdown
+from numpy import tile
 
 from . import util
 
@@ -39,3 +40,15 @@ def search(request):
             "entries": entries
         }
         return render(request, "encyclopedia/search.html", context)
+
+def create(request):
+    if request.method=='GET':
+        return render(request, "encyclopedia/create.html")
+    else:
+        title = request.POST.get('title')
+        content = request.POST.get('content')
+        if not title:
+            return render(request, "encyclopedia/error.html", {"message": "Please input title!"})
+        else:
+            util.save_entry(title, content)
+            return HttpResponseRedirect(reverse("index"))
