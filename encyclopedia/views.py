@@ -19,7 +19,7 @@ def entry(request, title):
     else:
         entry_html = Markdown().convert(entry_md)
         context = {
-            "tilte": title,
+            "title": title,
             "entry": entry_html
         }
         return render(request, "encyclopedia/entry.html", context)
@@ -54,3 +54,20 @@ def create(request):
         else:
             util.save_entry(title, content)
             return HttpResponseRedirect(reverse("entry", args=(title,)))
+
+def edit(request, title):
+    entry_md = util.get_entry(title)
+    if entry_md == None:
+        return render(request, "encyclopedia/error.html", {"message": "Page not found."})
+    elif request.method=='GET':
+        # entry_html = Markdown().convert(entry_md)
+        context = {
+            "title": title,
+            "entry": entry_md
+        }
+        return render(request, "encyclopedia/edit.html", context)
+    else:
+        content = request.POST.get('content')
+        util.save_entry(title, content)
+        return HttpResponseRedirect(reverse("entry", args=(title,)))
+
