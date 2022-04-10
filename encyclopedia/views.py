@@ -49,6 +49,8 @@ def create(request):
         content = request.POST.get('content')
         if not title:
             return render(request, "encyclopedia/error.html", {"message": "Please input title!"})
+        elif title in util.get_entry():
+            return render(request, "encyclopedia/error.html", {"message": "Page already exists!"})
         else:
             util.save_entry(title, content)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("entry", args=(title,)))
