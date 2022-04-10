@@ -1,8 +1,8 @@
+from random import randint
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from markdown2 import Markdown
-from numpy import tile
 
 from . import util
 
@@ -71,3 +71,7 @@ def edit(request, title):
         util.save_entry(title, content)
         return HttpResponseRedirect(reverse("entry", args=(title,)))
 
+def random(request):
+    entry_list = util.list_entries()
+    num = randint(0, len(entry_list)-1)
+    return HttpResponseRedirect(reverse("entry", args=(entry_list[num],)))
